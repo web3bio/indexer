@@ -59,5 +59,3 @@ services:
       - START_BLOCK=${START_BLOCK}
       - BATCH_SIZE=${BATCH_SIZE}
       - RECOVER_HISTORY=${RECOVER_HISTORY}
-volumes:
-  database:
