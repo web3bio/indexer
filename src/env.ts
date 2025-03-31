@@ -3,6 +3,7 @@ import { raise } from './utilities'
 export const env = Object.freeze({
   NODE_ENV: getEnvVariable('NODE_ENV'),
   DATABASE_URL: getEnvVariable('DATABASE_URL'),
+  DATABASE_SSL_FILE: getEnvVariable('DATABASE_SSL_FILE'),
   CHAIN_ID: getEnvVariable('CHAIN_ID'),
   HEARTBEAT_URL: getEnvVariable('HEARTBEAT_URL'),
   START_BLOCK: getEnvVariable('START_BLOCK'),

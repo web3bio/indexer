@@ -1,11 +1,3 @@
-version: '3.8'
-
-name: efp-indexer
-
-networks:
-  default:
-    driver: bridge
-
 services:
   ping:
     container_name: efp-indexer-ping
@@ -17,8 +9,7 @@ services:
         COPY ./scripts/ping.sh /usr/src/app/ping.sh
     command: ./ping.sh
     entrypoint: /usr/local/bin/bash
-    networks:
-      - default
+    network_mode: "host"
 
   anvil:
     container_name: efp-indexer-anvil
@@ -29,32 +20,12 @@ services:
       - ANVIL_IP_ADDR=0.0.0.0
     ports:
       - 8545:8545
-    networks:
-      - default
-
-  database:
-    container_name: efp-database
-    image: postgres:latest
-    restart: always
-    networks:
-      - default
-    command: postgres -c wal_level=logical -c max_replication_slots=20
-    volumes:
-      - database:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=efp
+    network_mode: "host"
 
   indexer:
     container_name: efp-indexer
-    depends_on:
-      - database
-    restart: "no"
-    networks:
-      - default
+    restart: "on-failure:7"
+    network_mode: "host"
     stdin_open: true
     tty: true
     build:
@@ -62,9 +33,14 @@ services:
       dockerfile: Dockerfile
       args:
         - NODE_ENV=production
+    image: efp-indexer:latest
+    mem_limit: 10g
+    volumes:
+      - ./certs:/usr/src/app/certs
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@efp-database:5432/efp?sslmode=disable}
+      - DATABASE_SSL_FILE=${DATABASE_SSL_FILE}
       - ENABLE_DATABASE_LOGGING=${ENABLE_DATABASE_LOGGING:-true}
       - CHAIN_ID=${CHAIN_ID:-11155111}
       - ANKR_ID=${ANKR_ID}
@@ -79,6 +55,9 @@ services:
       - EFP_CONTRACT_LIST_REGISTRY=${EFP_CONTRACT_LIST_REGISTRY:-0xd66c005A5F1e26BaaDe97cb9f270c9Edfa78a684}
       - EFP_CONTRACT_LIST_RECORDS=${EFP_CONTRACT_LIST_RECORDS:-0x84340faBF70340153fAB988404C4356EEf14d581}
       - EFP_CONTRACT_LINT_MINTER=${EFP_CONTRACT_LINT_MINTER:-0x8581B0CA827Cf577269721A596CEfC2ffc09BaDB}
-
+      - HEARTBEAT_URL=${HEARTBEAT_URL}
+      - START_BLOCK=${START_BLOCK}
+      - BATCH_SIZE=${BATCH_SIZE}
+      - RECOVER_HISTORY=${RECOVER_HISTORY}
 volumes:
   database:
