@@ -6,11 +6,11 @@ import type { EventSubscriber } from './interface'
 export class EventUploader implements EventSubscriber {
   async onEvent(event: Event): Promise<void> {
     await this.onEvents([event])
-    const rows = [EventUploader.#toTableRow(event)]
-    const result = await database.insertInto('events').values(rows).executeTakeFirst()
-    if (result.numInsertedOrUpdatedRows !== 1n) {
-      logger.error(`Failed to insert event ${JSON.stringify(event)}`)
-    }
+    // const rows = [EventUploader.#toTableRow(event)]
+    // const result = await database.insertInto('events').values(rows).executeTakeFirst()
+    // if (result.numInsertedOrUpdatedRows !== 1n) {
+    //   logger.error(`Failed to insert event ${JSON.stringify(event)}`)
+    // }
   }
 
   async onEvents(events: Event[]): Promise<void> {
