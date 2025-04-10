@@ -29,7 +29,8 @@ export async function watchAllEfpContractEvents({ client }: { client: EvmClient 
         efpListRegistryAbi,
         env.EFP_CONTRACTS.LIST_REGISTRY
       ),
-      new ContractEventPublisher(client, chainId, 'EFPListRecords', efpListRecordsAbi, env.EFP_CONTRACTS.LIST_RECORDS)
+      new ContractEventPublisher(client, chainId, 'EFPListRecords', efpListRecordsAbi, env.EFP_CONTRACTS.LIST_RECORDS),
+      new ContractEventPublisher(client, chainId, 'EFPListMinter', efpListMinterAbi, env.EFP_CONTRACTS.LIST_MINTER)
     ]
 
     // 2. Collect and interleave events in to a single ordered steam
