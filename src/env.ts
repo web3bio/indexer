@@ -3,6 +3,7 @@ import { raise } from './utilities'
 export const env = Object.freeze({
   NODE_ENV: getEnvVariable('NODE_ENV'),
   DATABASE_URL: getEnvVariable('DATABASE_URL'),
+  DATABASE_SSL_FILE: getEnvVariable('DATABASE_SSL_FILE'),
   CHAIN_ID: getEnvVariable('CHAIN_ID'),
   HEARTBEAT_URL: getEnvVariable('HEARTBEAT_URL'),
   START_BLOCK: getEnvVariable('START_BLOCK'),
@@ -11,7 +12,8 @@ export const env = Object.freeze({
   EFP_CONTRACTS: {
     ACCOUNT_METADATA: getEnvVariable('EFP_CONTRACT_ACCOUNT_METADATA'),
     LIST_REGISTRY: getEnvVariable('EFP_CONTRACT_LIST_REGISTRY'),
-    LIST_RECORDS: getEnvVariable('EFP_CONTRACT_LIST_RECORDS')
+    LIST_RECORDS: getEnvVariable('EFP_CONTRACT_LIST_RECORDS'),
+    LIST_MINTER: getEnvVariable('EFP_CONTRACT_LIST_MINTER')
   },
   PRIMARY_RPC_BASE: getEnvVariable('PRIMARY_RPC_BASE'),
   SECONDARY_RPC_BASE: getEnvVariable('SECONDARY_RPC_BASE'),

@@ -78,23 +78,24 @@ async function runSetupDbScript(): Promise<void> {
 
 async function main() {
   try {
+    logger.info(`⏳ DATABASE_URL ${env.DATABASE_URL}`)
     logger.log(`Process ID: ${process.pid}`)
-    // wait for db to be up
-    for (;;) {
-      try {
-        logger.log(`dbmate status`, `🗄️`)
-        await runDbmateCommand('status')
-        break
-      } catch {
-        // logger.warn(error)
-        await sleep(1_000)
-      }
-    }
-    // logger.box(`🗄️`, `dbmate up`)
-    await runSetupDbScript()
-    // await runDbmateCommand('up')
-    // logger.box(`🗄️`, `dbmate status`)
-    // await runDbmateCommand('status')
+    // // wait for db to be up
+    // for (;;) {
+    //   try {
+    //     logger.log(`dbmate status`, `🗄️`)
+    //     await runDbmateCommand('status')
+    //     break
+    //   } catch {
+    //     // logger.warn(error)
+    //     await sleep(1_000)
+    //   }
+    // }
+    // // logger.box(`🗄️`, `dbmate up`)
+    // await runSetupDbScript()
+    // // await runDbmateCommand('up')
+    // // logger.box(`🗄️`, `dbmate status`)
+    // // await runDbmateCommand('status')
 
     const chainId = env.CHAIN_ID
     const client = evmClients[chainId]()

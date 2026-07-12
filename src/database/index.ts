@@ -1,13 +1,22 @@
 import { type InsertObject, Kysely } from 'kysely'
 import { PostgresJSDialect } from 'kysely-postgres-js'
 import postgres from 'postgres'
+import fs from 'fs'
 
 import { env } from '#/env.ts'
 import type { DB } from './generated/index.ts'
 
 export type Row<T extends keyof DB> = InsertObject<DB, T>
 
-let postgresClient = postgres(env.DATABASE_URL)
+console.log(`⏳ DATABASE_URL ${env.DATABASE_URL}`)
+console.log(`⏳ DATABASE_SSL_FILE ${env.DATABASE_SSL_FILE}`)
+
+let postgresClient = postgres(env.DATABASE_URL, {
+  ssl: {
+    rejectUnauthorized: false, // Disable certificate validation (use carefully and avoid in production)
+    ca: fs.readFileSync(env.DATABASE_SSL_FILE).toString(), // Load root certificate if needed
+  }
+})
 let kyselyInstance = new Kysely<DB>({
   dialect: new PostgresJSDialect({ postgres: postgresClient })
 })
@@ -19,7 +28,12 @@ function scheduleReconnect() {
   retryTimeout = setTimeout(() => {
     retryTimeout = null
     try {
-      postgresClient = postgres(env.DATABASE_URL)
+      postgresClient = postgres(env.DATABASE_URL, {
+        ssl: {
+          rejectUnauthorized: false, // Disable certificate validation (use carefully and avoid in production)
+          ca: fs.readFileSync(env.DATABASE_SSL_FILE).toString(), // Load root certificate if needed
+        }
+      })
       kyselyInstance = new Kysely<DB>({
         dialect: new PostgresJSDialect({ postgres: postgresClient })
       })
