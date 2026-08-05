@@ -17,7 +17,7 @@ RUN bun install --production --frozen-lockfile
 COPY . .
 
 
-COPY ./certs/us-east-1-bundle.pem /usr/src/app/certs/us-east-1-bundle.pem
+COPY ./certs/global-bundle.pem /usr/src/app/certs/global-bundle.pem
 
 
 CMD ["bun", "./src/index.ts"]
